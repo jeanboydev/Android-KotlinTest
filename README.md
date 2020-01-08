@@ -353,9 +353,167 @@ fun main() {
 }
 ```
 
+## lambda 表达式
+
+### Lambda 表达式的特点
+
+- Lambda 表达式总是被大括号括着
+- 参数（如果存在）在 -> 之前声明（参数类型可以省略）
+- 函数体（如果存在）在 -> 后面
+
+```kotlin
+// 无参数
+var test = { }
+
+// 有参数 in -> out
+var test2 = { name: String ->
+    println(name)
+    it + "aaa" // 不能直接使用 return，最后一个表达式为返回值
+}
+
+// 作为参数
+fun test3(a: Int, b: (num: Int) -> Int): Int {
+    return a + b.invoke(2)
+}
+```
+
+## 闭包
+
+所谓闭包，即是函数中包含函数，这里的函数我们可以包含（Lambda表达式，匿名函数，局部函数，对象表达式）。
+
+看一段 Java 代码：
+
+```java
+public class TestJava{
+
+    private void test() {
+        private void test() { // 错误，因为Java中不支持函数包含函数
+        }
+    }
+
+    private void test1(){} // 正确，Java中的函数只能包含在对象中+
+}
+```
+
+看一段 Kotlin 代码：
+
+```kotlin
+fun test1(){
+    fun test2() { // 正确，因为 Kotlin 中可以函数嵌套函数
+    }
+}
+```
+
+- 携带状态
+
+让函数返回一个函数，并携带状态值。
+
+```kotlin
+fun test(b: Int): () -> Int {
+    var a = 3
+    return fun(): Int {
+        a++
+        return a + b
+    }
+}
+```
+
+- 引用外部变量，并改变外部变量的值
+
+```kotlin
+var sum : Int = 0
+val arr = arrayOf(1,3,5,7,9)
+arr.filter { it < 7  }.forEach { sum += it }
+```
+
+广义上来说，在 Kotlin 语言之中，函数、条件语句、控制流语句、花括号逻辑块、Lambda 表达式都可以称之为闭包，但通常情况下，我们所指的闭包都是在说 Lambda 表达式。
+
 ## 作用域函数
 
-## lambda 表达式
+Kotlin标准库包含几个函数，它们的唯一目的是在对象的上下文中执行代码块。当您对提供lambda表达式的对象调用这样一个函数时，它将形成一个临时作用域。在这个范围内，您可以访问没有名称的对象。这些函数称为作用域函数。
+
+```kotlin
+// 创建画笔，并设置一些基础属性
+val paint = Paint()
+paint.isAntiAlias = true
+paint.color = Color.parseColor("#999999")
+paint.textSize = sp(8f).toFloat()
+
+// apply 作用域函数来优化一下
+val mRangTextPaint = Paint().apply {
+  isAntiAlias = true
+  color = Color.parseColor("#999999")
+  textSize = sp(8f).toFloat()
+}
+```
+
+作用域函数猛地一看很相似，但是他们有以下两个主要区别：
+
+| 作用于函数 | Object reference |     Return value      |
+| :--------: | :--------------: | :-------------------: |
+|    run     |       this       |     Lambda result     |
+|    with    |       this       |     Lambda result     |
+|   apply    |       this       |      上下文对象       |
+|    let     |        it        |     Lambda result     |
+|    also    |        it        |      上下文对象       |
+
+- let
+
+let 经常用于仅使用非空值执行代码块。如需对非空对象执行操作，可对其使用安全调用操作符 ?. 并调用 let 在 lambda 表达式中执行操作。
+
+```kotlin
+val str: String? = "Hello" 
+//processNonNullString(str)       // 编译错误：str 可能为空
+val length = str?.let { 
+    println("let() called on $it")
+    processNonNullString(it)      // 编译通过：'it' 在 '?.let { }' 中必不为空
+    it.length
+}
+```
+
+- with
+
+在代码中，with 可以理解为对于这个对象，执行以下操作。
+
+```kotlin
+val numbers = mutableListOf("one", "two", "three")
+with(numbers) {
+    println("'with' is called with argument $this")
+    println("It contains $size elements")
+}
+```
+
+- run
+
+run 和 with 做同样的事情，但是调用方式和 let 一样——作为上下文对象的扩展函数。
+
+- apply
+
+apply 的常见情况是对象配置。这样的调用可以理解为将以下赋值操作应用于对象。
+
+```kotlin
+val adam = Person("Adam").apply {
+    age = 32
+    city = "London"        
+}
+```
+
+- also
+
+also 对于执行一些将上下文对象作为参数的操作很有用。可以将其理解为并且执行以下操作。
+
+```kotlin
+val numbers = mutableListOf("one", "two", "three")
+numbers
+    .also { println("The list elements before adding new one: $it") }
+    .add("four")
+```
+
+### 使用场景
+
+很多人接触到作用域函数的时候，最头疼的问题不是不会用，而是不知道如何选择合适的作用域函数。之所以出现这种情况，是因为其实作用域函数在多数情况下是可以互换的，因此官方文档也给我们推荐了各个函数常见的使用场景。
+
+![](https://user-gold-cdn.xitu.io/2019/9/6/16d049bbdb6f658d?imageView2/0/w/1280/h/960/format/webp/ignore-error/1)
 
 ## 解构
 
