@@ -126,7 +126,7 @@ Kotlin 之所以能抛弃静态成员，主要原因在于它允许包级属性�
 ```kotlin
 class Test{
     companion object { // 伴生对象
-        const val STATIC ="常量"
+        const val STATIC = "常量"
     }
 }
 ```
@@ -428,6 +428,77 @@ arr.filter { it < 7  }.forEach { sum += it }
 
 广义上来说，在 Kotlin 语言之中，函数、条件语句、控制流语句、花括号逻辑块、Lambda 表达式都可以称之为闭包，但通常情况下，我们所指的闭包都是在说 Lambda 表达式。
 
+
+## 解构声明
+
+Kotlin 可以将一个对象解构为多个变量：
+
+```kotlin
+val (name, age) = person
+```
+
+这种语法被称为解构声明。解构声明一次创建多个变量。比如声明 name 和 age 两个新的变量，可以单独使用。
+
+解构声明最终编译为下面的代码：
+
+```kotlin
+val name = person.component1()
+val age = person.component2()
+```
+
+component1() 和 component2() 函数是 Kotlin 中广泛使用的惯例原则的例子（如+、* 操作符，for 循环等）。解构声明右侧能放任意对象，只要可以调用所需的组件函数，如组件 component3()，component4() 等等。
+
+解构声明同样可以在 for 循环中使用：
+
+```kotlin
+for ((a, b) in collection) {
+ //...
+}
+```
+
+变量 a 和 b 为集合中元素 component1() 和 component2() 的值。
+
+### 一个函数返回两个值
+
+如果需要一个函数返回两个值，如：一个返回对象和一些排序状态，Kotlin 可以通过声明一个 data 类并返回它的实例方式。
+
+```kotlin
+data class Result(val result: Int , val state: Status)
+
+fun function(): Result{
+    // 计算
+    return Result(result ,status)
+}
+
+// 现在可以使用这个函数了
+val (result , status) = function()
+```
+
+### 解构声明和映射
+
+下面示例可能是迭代 Map 的好的方式：
+
+```kotlin
+for((key , value ) in map){
+    // ...
+}
+```
+
+要让这正常工作，我们得
+
+- 通过提供一个 iterator() 函数让映射表现得像一个队列值，
+- 通过提供函数 component1() and component2() 让每组元素表现得像一对。
+
+而且事实上，标准库提供了这些扩展：
+
+```kotlin
+operator fun <K, V> Map<K, V>.iterator(): Iterator<Map.Entry<K, V>> = entrySet().iterator()
+operator fun <K, V> Map.Entry<K, V>.component1() = getKey()
+operator fun <K, V> Map.Entry<K, V>.component2() = getValue()
+```
+
+所以可以在有映射 for 循环（与 data 类集合一样）中自由地使用解构声明。
+
 ## 作用域函数
 
 Kotlin标准库包含几个函数，它们的唯一目的是在对象的上下文中执行代码块。当您对提供lambda表达式的对象调用这样一个函数时，它将形成一个临时作用域。在这个范围内，您可以访问没有名称的对象。这些函数称为作用域函数。
@@ -514,8 +585,6 @@ numbers
 很多人接触到作用域函数的时候，最头疼的问题不是不会用，而是不知道如何选择合适的作用域函数。之所以出现这种情况，是因为其实作用域函数在多数情况下是可以互换的，因此官方文档也给我们推荐了各个函数常见的使用场景。
 
 ![](https://user-gold-cdn.xitu.io/2019/9/6/16d049bbdb6f658d?imageView2/0/w/1280/h/960/format/webp/ignore-error/1)
-
-## 解构
 
 ## 协程
 
