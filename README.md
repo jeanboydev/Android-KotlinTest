@@ -520,13 +520,13 @@ val mRangTextPaint = Paint().apply {
 
 作用域函数猛地一看很相似，但是他们有以下两个主要区别：
 
-| 作用于函数 | Object reference |     Return value      |
-| :--------: | :--------------: | :-------------------: |
-|    run     |       this       |     Lambda result     |
-|    with    |       this       |     Lambda result     |
-|   apply    |       this       |      上下文对象       |
-|    let     |        it        |     Lambda result     |
-|    also    |        it        |      上下文对象       |
+| 作用域函数 | Object reference | Return value  |
+| :--------: | :--------------: | :-----------: |
+|    run     |       this       | Lambda result |
+|    with    |       this       | Lambda result |
+|   apply    |       this       |  上下文对象   |
+|    let     |        it        | Lambda result |
+|    also    |        it        |  上下文对象   |
 
 - let
 
@@ -588,11 +588,98 @@ numbers
 
 ## 协程
 
+https://www.bennyhuo.com/2019/04/01/basic-coroutines/
+
+https://kaixue.io/tag/kotlin-xie-cheng/
+
+「协程 Coroutines」源自 Simula 和 Modula-2 语言，这个术语早在 1958 年就被 Melvin Edward Conway 发明并用于构建汇编程序，说明协程是一种编程思想，并不局限于特定的语言。
+
+Go 语言也有协程，叫 Goroutines，从英文拼写就知道它和 Coroutines 还是有些差别的（设计思想上是有关系的），否则 Kotlin 的协程完全可以叫 Koroutines 了。
+
+协程是一种非抢占式或者说协作式的计算机程序并发调度的实现，程序可以主动挂起或者恢复执行。
+
+我们在 Java 虚拟机上所认识到的线程大多数的实现是映射到内核的线程的，也就是说线程当中的代码逻辑在线程抢到 CPU 的时间片的时候才可以执行，否则就得歇着，当然这对于我们开发者来说是透明的；而经常听到所谓的协程更轻量的意思是，协程并不会映射成内核线程或者其他这么重的资源，它的调度在用户态就可以搞定，任务之间的调度并非抢占式，而是协作式的。
+
+```kotlin
+public fun CoroutineScope.launch(
+    // 上下文
+    context: CoroutineContext = EmptyCoroutineContext,
+    // 启动模式
+    start: CoroutineStart = CoroutineStart.DEFAULT,
+    block: suspend CoroutineScope.() -> Unit
+): Job {
+    val newContext = newCoroutineContext(context)
+    val coroutine = if (start.isLazy)
+        LazyStandaloneCoroutine(newContext, block) else
+        StandaloneCoroutine(newContext, active = true)
+    coroutine.start(start, coroutine, block)
+    return coroutine
+}
+```
+
+### 基本使用
+
+```kotlin
+// 方法一，使用 runBlocking 顶层函数
+runBlocking {
+    getImage(imageId)
+}
+
+// 方法二，使用 GlobalScope 单例对象
+// 可以直接调用 launch 开启协程
+GlobalScope.launch {
+    getImage(imageId)
+}
+
+// 方法三，自行通过 CoroutineContext 创建一个 CoroutineScope 对象
+// 需要一个类型为 CoroutineContext 的参数
+val coroutineScope = CoroutineScope(context)
+coroutineScope.launch {
+    getImage(imageId)
+}
+```
+
+- 方法一通常适用于单元测试的场景，而业务开发中不会用到这种方法，因为它是线程阻塞的。
+- 方法二和使用 runBlocking 的区别在于不会阻塞线程。但在 Android 开发中同样不推荐这种用法，因为它的生命周期会和 app 一致，且不能取消。
+- 方法三是比较推荐的使用方法，我们可以通过 context 参数去管理和控制协程的生命周期（这里的 context 和 Android 里的不是一个东西，是一个更通用的概念，会有一个 Android 平台的封装来配合使用）。
+
+协程最常用的功能是并发，而并发的典型场景就是多线程。可以使用 Dispatchers.IO 参数把任务切到 IO 线程执行：
+
+```kotlin
+coroutineScope.launch(Dispatchers.IO) {
+   // ...
+}
+```
+
+也可以使用 Dispatchers.Main 参数切换到主线程：
+
+```kotlin
+coroutineScope.launch(Dispatchers.Main) {
+   // ...
+}
+```
+
+### 启动模式
+
+- DEFAULT：饿汉式
+- LAZY：懒汉式
+- ATOMIC
+- UNDISPATCHED
+
+### 上下文
+
+### 拦截器
+
+### 调度器
+
+### 异常处理
+
 ## suspend
 
 ## async
 
 ## 通道
+
 ## 管道
 
 ## Mutex
