@@ -10,16 +10,18 @@ import kotlinx.coroutines.runBlocking
  * @since 2020/1/8 11:08
  */
 
-fun main() = runBlocking {
-    val job = launch {
-        repeat(1000) {
-            println("job: I'm sleeping $it ...")
-            delay(500L)
+class Test3 {
+    fun main() = runBlocking {
+        val job = launch {
+            repeat(1000) {
+                println("job: I'm sleeping $it ...")
+                delay(500L)
+            }
         }
+        delay(1300L)
+        println("main： I'm tired of waiting!")
+        job.cancel()
+        job.join()
+        print("main: Now I can quit.")
     }
-    delay(1300L)
-    println("main： I'm tired of waiting!")
-    job.cancel()
-    job.join()
-    print("main: Now I can quit.")
 }

@@ -11,20 +11,22 @@ import kotlinx.coroutines.runBlocking
  * @since 2020/1/8 10:38
  */
 
-fun main() = runBlocking {
-    launch {
-        delay(200L)
-        println("Task from runBlocking")
-    }
-
-    coroutineScope {
+class Test2 {
+    fun main() = runBlocking {
         launch {
             delay(200L)
-            println("Task from nested launch")
+            println("Task from runBlocking")
         }
 
-        delay(100L)
-        println("Task from coroutine scope")
+        coroutineScope {
+            launch {
+                delay(200L)
+                println("Task from nested launch")
+            }
+
+            delay(100L)
+            println("Task from coroutine scope")
+        }
+        println("Coroutine scope is over")
     }
-    println("Coroutine scope is over")
 }

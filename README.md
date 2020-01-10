@@ -592,6 +592,8 @@ https://www.bennyhuo.com/2019/04/01/basic-coroutines/
 
 https://kaixue.io/tag/kotlin-xie-cheng/
 
+https://www.jianshu.com/p/2659bbe0df16
+
 「协程 Coroutines」源自 Simula 和 Modula-2 语言，这个术语早在 1958 年就被 Melvin Edward Conway 发明并用于构建汇编程序，说明协程是一种编程思想，并不局限于特定的语言。
 
 Go 语言也有协程，叫 Goroutines，从英文拼写就知道它和 Coroutines 还是有些差别的（设计思想上是有关系的），否则 Kotlin 的协程完全可以叫 Koroutines 了。
@@ -668,15 +670,29 @@ coroutineScope.launch(Dispatchers.Main) {
 
 ### 上下文
 
+CoroutineScope，可以理解为协程本身，包含了 CoroutineContext。
+
+CoroutineContext，协程上下文，是一些元素的集合，主要包括 Job 和 CoroutineDispatcher 元素，可以代表一个协程的场景。
+
+EmptyCoroutineContext 表示一个空的协程上下文。
+
 ### 拦截器
 
 ### 调度器
 
+CoroutineDispatcher，协程调度器，决定协程所在的线程或线程池。它可以指定协程运行于特定的一个线程、一个线程池或者不指定任何线程（这样协程就会运行于当前线程）。`coroutines-core`中 CoroutineDispatcher 有三种标准实现`Dispatchers.Default`、`Dispatchers.IO`，`Dispatchers.Main`和`Dispatchers.Unconfined`，Unconfined 就是不指定线程。
+
+`launch`函数定义如果不指定`CoroutineDispatcher`或者没有其他的`ContinuationInterceptor`，默认的协程调度器就是`Dispatchers.Default`，`Default`是一个协程调度器，其指定的线程为共有的线程池，线程数量至少为 2 最大与 CPU 数相同。
+
 ### 异常处理
 
-## suspend
+### 挂起函数（suspend）
+
+
 
 ## async
+
+
 
 ## 通道
 
