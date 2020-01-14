@@ -27,7 +27,7 @@ abstract class BaseConvertStrategy<Response, Result> : LocalHandler<Result>,
     fun toFetch() {
         resultData.value = Wrapper.loading(null)
         fetchFromRemote(object : Follower<Response> {
-            override fun onSuccess(response: Response) {
+            override fun onSuccess(response: Response?) {
                 if (response == null) {
                     resultData.value = Wrapper.successful(null)
                     return
@@ -39,13 +39,13 @@ abstract class BaseConvertStrategy<Response, Result> : LocalHandler<Result>,
                 }
             }
 
-            override fun onError(code: Int, msg: String) {
+            override fun onError(code: Int, msg: String?) {
                 onFetchError(code, msg)
             }
         })
     }
 
-    open fun onFetchError(code: Int, msg: String) {
+    open fun onFetchError(code: Int, msg: String?) {
         resultData.value = Wrapper.error(code, msg)
     }
 

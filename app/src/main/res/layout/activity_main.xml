@@ -21,4 +21,11 @@
         android:onClick="toUpdate"
         android:text="点击修改文本" />
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:onClick="toTestActivity"
+        android:text="跳转" />
+
 </LinearLayout>

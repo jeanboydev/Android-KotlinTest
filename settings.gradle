@@ -1,2 +1,2 @@
-include ':app', ':module_demo', ':component_base', ':component_data', ':component_network', ':module_source'
+include ':app', ':module_demo', ':component_base', ':component_data', ':component_network', ':module_source', ':module_test'
 rootProject.name='Kotlin'

@@ -15,7 +15,7 @@ abstract class RemotePriorityConvertStrategy<Response, Result> :
         toFetch()
     }
 
-    override fun onFetchError(code: Int, msg: String) {
+    override fun onFetchError(code: Int, msg: String?) {
         val localData = loadFromLocal()
         localData?.value?.let {
             resultData.value = Wrapper.successful(it)

@@ -7,6 +7,6 @@ package com.jeanboy.component.data.core
  */
 interface Follower<Response> {
 
-    fun onSuccess(response: Response)
-    fun onError(code: Int, msg: String)
+    fun onSuccess(response: Response?)
+    fun onError(code: Int, msg: String?)
 }

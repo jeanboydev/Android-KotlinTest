@@ -17,29 +17,31 @@ abstract class BaseStrategy<Result> : LocalHandler<Result>, RemoteHandler<Result
         return resultData
     }
 
-    fun toCommit(result: Result) {
-        DataExecutors.instance.toDisk(Runnable {
-            saveToLocal(result)
-        })
+    fun toCommit(result: Result?) {
+        result?.let {
+            DataExecutors.instance.toDisk(Runnable {
+                saveToLocal(result)
+            })
+        }
     }
 
     fun toFetch() {
         resultData.value = Wrapper.loading(null)
         fetchFromRemote(object : Follower<Result> {
-            override fun onSuccess(response: Result) {
+            override fun onSuccess(response: Result?) {
                 resultData.value = Wrapper.successful(response)
                 if (isAutoCache()) {
                     toCommit(response)
                 }
             }
 
-            override fun onError(code: Int, msg: String) {
+            override fun onError(code: Int, msg: String?) {
                 onFetchError(code, msg)
             }
         })
     }
 
-    open fun onFetchError(code: Int, msg: String) {
+    open fun onFetchError(code: Int, msg: String?) {
         resultData.value = Wrapper.error(code, msg)
     }
 

@@ -17,7 +17,6 @@ class OkHttpProcessor<T> {
 
     fun request(call: Call<T>, watcher: Watcher<Result<T>>?) {
         call.enqueue(object : Callback<T> {
-
             override fun onResponse(call: Call<T>, response: Response<T>) {
                 if (response.isSuccessful) {
                     val headers = response.headers()

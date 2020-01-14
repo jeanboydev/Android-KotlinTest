@@ -1,6 +1,8 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
 android {
     compileSdkVersion rootProject.android.compileSdkVersion
     buildToolsVersion rootProject.android.buildToolsVersion
@@ -47,5 +49,5 @@ dependencies {
     // Glide
     api "com.github.bumptech.glide:glide:$versions.glide"
     api "com.github.bumptech.glide:okhttp3-integration:$versions.glide"
-    annotationProcessor "com.github.bumptech.glide:compiler:$versions.glide"
+    kapt "com.github.bumptech.glide:compiler:$versions.glide"
 }
