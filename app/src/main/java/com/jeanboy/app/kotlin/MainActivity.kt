@@ -3,13 +3,20 @@ package com.jeanboy.app.kotlin
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
+import com.jeanboy.component.base.BaseActivity
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+    override fun getLayoutId(): Int {
+        return R.layout.activity_main
+    }
+
+    override fun setupView(savedInstanceState: Bundle?) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun setupData() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     fun toUpdate(view: View) {

@@ -1,7 +1,6 @@
 package com.jeanboy.app.kotlin.base
 
-import android.app.Application
-import kotlin.properties.Delegates
+import com.jeanboy.component.base.BaseApplication
 
 /**
  *
@@ -9,15 +8,11 @@ import kotlin.properties.Delegates
  * @since 2020/1/6 18:38
  */
 
-class MainApplication : Application() {
+class MainApplication : BaseApplication() {
 
-    companion object {
-        private var instance: MainApplication by Delegates.notNull()
-        fun instance() = instance
+    override fun onInitialized() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun onCreate() {
-        super.onCreate()
-        instance = this
-    }
+
 }

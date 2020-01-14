@@ -32,17 +32,25 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     testImplementation "junit:junit:$versions.junit"
-    androidTestImplementation "androidx.test.ext:junit:$versions.ext_junit"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$versions.espresso_core"
+    androidTestImplementation "androidx.test.ext:junit:$versions.extJunit"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$versions.espressoCore"
 
-
-    api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kotlin_stdlib_jdk7"
+    api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kotlinStdlibJdk7"
 
     // MaterialDesign
-    api config.dependencies.appcompat
-    api config.dependencies.fragment
-    api config.dependencies.constraintLayout
+    api "androidx.annotation:annotation:$versions.annotation"
+    api "androidx.appcompat:appcompat:$versions.appcompat"
+    api "androidx.activity:activity:$versions.activity"
+    api "androidx.fragment:fragment:$versions.fragment"
+    api "com.google.android.material:material:$versions.material"
+    api "androidx.constraintlayout:constraintlayout:$versions.constraintlayout"
+    api "androidx.coordinatorlayout:coordinatorlayout:$versions.coordinatorlayout"
+    api "androidx.swiperefreshlayout:swiperefreshlayout:$versions.swiperefreshlayout"
+    api "androidx.recyclerview:recyclerview:$versions.recyclerview"
+    api "androidx.recyclerview:recyclerview-selection:$versions.recyclerviewSelection"
+    api "androidx.cardview:cardview:$versions.cardview"
+    api "androidx.viewpager2:viewpager2:$versions.viewpager2"
 
     // Log
-    api config.dependencies.timber
+    api "com.jakewharton.timber:timber:$versions.timber"
 }
