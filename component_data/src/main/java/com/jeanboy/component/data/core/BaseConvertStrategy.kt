@@ -3,6 +3,9 @@ package com.jeanboy.component.data.core
 import androidx.lifecycle.MediatorLiveData
 import com.jeanboy.component.data.handler.LocalHandler
 import com.jeanboy.component.data.handler.RemoteConvertHandler
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 /**
  *
@@ -18,10 +21,12 @@ abstract class BaseConvertStrategy<Response, Result> : LocalHandler<Result>,
         return resultData
     }
 
-    fun toCommit(result: Result) {
-        DataExecutors.instance.toDisk(Runnable {
-            saveToLocal(result)
-        })
+    fun toCommit(result: Result?) {
+        result?.let {
+            GlobalScope.launch(Dispatchers.IO) {
+                saveToLocal(it)
+            }
+        }
     }
 
     fun toFetch() {

@@ -13,7 +13,7 @@ import timber.log.Timber
 @Route(path = "/test/activity")
 class TestActivity : BaseActivity() {
 
-    var userViewModel: UserViewModel? = null
+    private var userViewModel: UserViewModel? = null
 
     override fun getLayoutId(): Int {
         return R.layout.activity_test
@@ -25,7 +25,7 @@ class TestActivity : BaseActivity() {
 
     override fun setupData() {
         userViewModel?.getLiveData()?.observe(this, Observer<Wrapper<String>> {
-            Timber.e("=======onChanged========")
+            Timber.e("=======onChanged========\n${it.data}")
         })
     }
 

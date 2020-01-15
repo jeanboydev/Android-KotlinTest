@@ -2,6 +2,9 @@ package com.jeanboy.component.data.strategy
 
 import com.jeanboy.component.data.core.BaseStrategy
 import com.jeanboy.component.data.core.Wrapper
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 
 /**
  *
@@ -11,13 +14,18 @@ import com.jeanboy.component.data.core.Wrapper
 abstract class CachePriorityStrategy<Result> : BaseStrategy<Result>() {
 
     init {
-        val localData = this.loadFromLocal()
-        localData?.value?.let {
-            if (!this.shouldFetch(it)) {
-                resultData.value = Wrapper.successful(it)
+        runBlocking {
+            val localData = withContext(Dispatchers.IO) {
+                loadFromLocal()
             }
+
+            localData?.value?.let {
+                if (!shouldFetch(it)) {
+                    resultData.value = Wrapper.successful(it)
+                }
+            }
+            toFetch()
         }
-        toFetch()
     }
 
     override fun isAutoCache(): Boolean {

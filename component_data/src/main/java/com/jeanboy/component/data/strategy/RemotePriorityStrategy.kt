@@ -2,6 +2,9 @@ package com.jeanboy.component.data.strategy
 
 import com.jeanboy.component.data.core.BaseStrategy
 import com.jeanboy.component.data.core.Wrapper
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 
 /**
  *
@@ -15,12 +18,17 @@ abstract class RemotePriorityStrategy<Result> : BaseStrategy<Result>() {
     }
 
     override fun onFetchError(code: Int, msg: String?) {
-        val localData = loadFromLocal()
-        localData?.value?.let {
-            resultData.value = Wrapper.successful(it)
-            return
+        runBlocking {
+            val localData = withContext(Dispatchers.IO) {
+                loadFromLocal()
+            }
+
+            localData?.value?.let {
+                resultData.value = Wrapper.successful(it)
+                return@let
+            }
+            super.onFetchError(code, msg)
         }
-        super.onFetchError(code, msg)
     }
 
     override fun isAutoCache(): Boolean {

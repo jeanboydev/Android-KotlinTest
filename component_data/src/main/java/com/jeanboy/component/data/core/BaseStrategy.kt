@@ -3,6 +3,9 @@ package com.jeanboy.component.data.core
 import androidx.lifecycle.MediatorLiveData
 import com.jeanboy.component.data.handler.LocalHandler
 import com.jeanboy.component.data.handler.RemoteHandler
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 /**
  *
@@ -19,9 +22,9 @@ abstract class BaseStrategy<Result> : LocalHandler<Result>, RemoteHandler<Result
 
     fun toCommit(result: Result?) {
         result?.let {
-            DataExecutors.instance.toDisk(Runnable {
-                saveToLocal(result)
-            })
+            GlobalScope.launch(Dispatchers.IO) {
+                saveToLocal(it)
+            }
         }
     }
 

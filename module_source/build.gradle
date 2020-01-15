@@ -37,6 +37,9 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:$versions.extJunit"
     androidTestImplementation "androidx.test.espresso:espresso-core:$versions.espressoCore"
 
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.ktxCore"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$versions.ktxCoroutines"
+
     // Room
     implementation "androidx.room:room-runtime:$versions.room"
     kapt "androidx.room:room-compiler:$versions.room"
