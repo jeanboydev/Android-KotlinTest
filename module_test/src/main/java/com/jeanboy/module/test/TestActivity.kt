@@ -24,7 +24,7 @@ class TestActivity : BaseActivity() {
     }
 
     override fun setupData() {
-        userViewModel?.getLiveData()?.observe(this, Observer<Wrapper<String>> {
+        userViewModel?.liveData?.observe(this, Observer<Wrapper<String>> {
             Timber.e("=======onChanged========\n${it.data}")
         })
     }
